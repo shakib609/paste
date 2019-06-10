@@ -29,7 +29,7 @@ class PasteAPITestCase(GraphQLTestCase):
             ) for x in range(len(contents))
         ]
 
-    def test_some_query(self):
+    def test_pastes_query(self):
         response = self.query('''
             query {
                 pastes {
@@ -40,9 +40,47 @@ class PasteAPITestCase(GraphQLTestCase):
                     updatedAt
                     public
                     language
+                    createdBy {
+                        username
+                        email
+                        firstName
+                        lastName
+                    }
                 }
             }
             ''')
         content = json.loads(response.content)
         self.assertResponseNoErrors(response)
         self.assertEqual(len(content['data']['pastes']), 4)
+
+    def test_create_paste_mutation(self):
+        response = self.query(
+            '''
+            mutation createPaste($input: CreatePasteInput!) {
+                createPaste(input: $input) {
+                    paste {
+                        id
+                        title
+                        content
+                        createdAt
+                        updatedAt
+                        public
+                        language
+                        createdBy {
+                            username
+                            email
+                            firstName
+                            lastName
+                        }
+                    }
+                }
+            }
+        ''',
+            op_name='createPaste',
+            input_data={
+                'content': 'print(Test Data)',
+                'language': 'python'
+            },
+        )
+        self.assertResponseNoErrors(response)
+        self.assertEqual(Paste.objects.count(), 5)
