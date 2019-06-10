@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db.utils import IntegrityError
 from django.test import TestCase
 
-from .models import Folder, Paste
+from ..models import Folder, Paste
 
 
 class PasteModelTestCase(TestCase):
@@ -57,8 +57,3 @@ class PasteModelTestCase(TestCase):
             folder=self.folder,
         )
         self.assertEqual(Paste.objects.count(), 0)
-
-
-class FolderModelTestCase(TestCase):
-    # TODO: Write Tests for Folder model
-    pass
