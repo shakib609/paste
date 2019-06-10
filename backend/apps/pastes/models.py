@@ -25,6 +25,7 @@ class Paste(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     content = models.TextField(default=None)
     public = models.BooleanField(default=True)
+    language = models.CharField(max_length=128, null=True)
     folder = models.ForeignKey(
         Folder,
         on_delete=models.CASCADE,
