@@ -22,15 +22,12 @@ class PasteAPITestCase(JSONWebTokenTestCase, GraphQLTestCase):
             name="Python Codes",
             created_by=self.user,
         )
-        languages = ['Python', 'JavaScript', 'Dart', 'Elixir']
-        contents = [f'Hello {x}' for x in languages]
-        self.pastes = [
+        for x in ['Python', 'JavaScript', 'Dart', 'Elixir']:
             Paste.objects.create(
-                content=contents[x],
+                content=f'Hello {x}',
                 folder=self.folder,
                 created_by=self.user,
-            ) for x in range(len(contents))
-        ]
+            )
 
     def test_pastes_query(self):
         response = self.query('''

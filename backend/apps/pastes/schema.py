@@ -22,9 +22,16 @@ class FolderType(DjangoObjectType):
 # Queries
 class Query(graphene.ObjectType):
     pastes = graphene.List(PasteType)
+    folders = graphene.List(FolderType)
 
     def resolve_pastes(self, info, **kwargs):
         return Paste.objects.all()
+
+    def resolve_folders(self, info, **kwargs):
+        if info.context.user.is_anonymous:
+            raise Exception('Anonymous users can not query folders')
+        else:
+            return Folder.objects.filter(created_by=info.context.user)
 
 
 # Mutations
@@ -100,6 +107,50 @@ class UpdatePaste(graphene.Mutation):
         return UpdatePaste(paste=paste)
 
 
+class CreateFolderInput(graphene.InputObjectType):
+    name = graphene.String(required=True)
+
+
+class CreateFolder(graphene.Mutation):
+    folder = graphene.Field(FolderType)
+
+    class Arguments:
+        input = CreateFolderInput(required=True)
+
+    def mutate(self, info, input=None):
+        if info.context.user.is_anonymous:
+            raise Exception('Anonymous users can not create folders.')
+        folder = Folder.objects.create(
+            name=input.name,
+            created_by=info.context.user,
+        )
+        return CreateFolder(folder=folder)
+
+
+class UpdateFolderInput(CreateFolderInput, graphene.InputObjectType):
+    id = graphene.ID(required=True)
+
+
+class UpdateFolder(graphene.Mutation):
+    folder = graphene.Field(FolderType)
+
+    class Arguments:
+        input = UpdateFolderInput(required=True)
+
+    def mutate(self, info, input=None):
+        user = info.context.user
+        if user.is_anonymous:
+            raise Exception('Anonymous users can not update folders.')
+        folder = Folder.objects.filter(id=input.id, created_by=user).first()
+        if folder is None:
+            raise Exception(f'Folder with the ID {input.id} not found.')
+        folder.name = input.name
+        folder.save()
+        return UpdateFolder(folder=folder)
+
+
 class Mutation:
     create_paste = CreatePaste.Field()
     update_paste = UpdatePaste.Field()
+    create_folder = CreateFolder.Field()
+    update_folder = UpdateFolder.Field()
