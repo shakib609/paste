@@ -41,11 +41,41 @@ class CreatePaste(graphene.Mutation):
             public=input.public,
             language=input.language,
         )
-        # if info.context.user.is_authenticated():
-        #     paste.created_by = info.context.user
+        if not info.context.user.is_anonymous:
+            paste.created_by = info.context.user
         paste.save()
         return CreatePaste(paste=paste)
 
 
+class UpdatePasteInput(CreatePasteInput, graphene.InputObjectType):
+    id = graphene.ID(required=True)
+
+
+class UpdatePaste(graphene.Mutation):
+    paste = graphene.Field(PasteType)
+
+    class Arguments:
+        input = UpdatePasteInput(required=True)
+
+    def mutate(self, info, input=None):
+        if info.context.user.is_anonymous:
+            raise Exception('Only authenticated users can update their pastes')
+
+        paste_qs = Paste.objects.filter(id=input.id)
+        if len(paste_qs) == 0:
+            raise Exception('Paste object with the given ID not found!')
+        paste = paste_qs[0]
+
+        if paste.created_by is not None and (paste.created_by.username !=
+                                             info.context.user.username):
+            raise Exception('User can update his/her own pastes only')
+        paste.title = input.title
+        paste.content = input.content
+        paste.public = input.public
+        paste.save()
+        return UpdatePaste(paste=paste)
+
+
 class Mutation:
     create_paste = CreatePaste.Field()
+    update_paste = UpdatePaste.Field()
