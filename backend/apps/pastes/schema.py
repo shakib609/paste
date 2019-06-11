@@ -1,7 +1,7 @@
 import graphene
 from graphene_django import DjangoObjectType
 
-from .models import Paste
+from .models import Folder, Paste
 from ..users.schema import UserDetailType
 
 
@@ -10,6 +10,13 @@ class PasteType(DjangoObjectType):
 
     class Meta:
         model = Paste
+
+
+class FolderType(DjangoObjectType):
+    created_by = UserDetailType
+
+    class Meta:
+        model = Folder
 
 
 # Queries
@@ -26,6 +33,7 @@ class CreatePasteInput(graphene.InputObjectType):
     title = graphene.String()
     public = graphene.Boolean(default_value=True)
     language = graphene.String()
+    folder_id = graphene.ID()
 
 
 class CreatePaste(graphene.Mutation):
@@ -35,14 +43,25 @@ class CreatePaste(graphene.Mutation):
         input = CreatePasteInput(required=True)
 
     def mutate(self, info, input=None):
+        user = folder = None
+        if info.context.user.is_authenticated:
+            user = info.context.user
+        if input.folder_id:
+            if user is None:
+                raise Exception(
+                    'Anonymous User can not set a folder to a paste.')
+            else:
+                folder = Folder.objects.filter(pk=input.folder_id).first()
+                if folder is None:
+                    raise Exception('Folder with that ID not found.')
         paste = Paste(
             content=input.content,
             title=input.title,
             public=input.public,
             language=input.language,
+            created_by=user,
+            folder=folder,
         )
-        if not info.context.user.is_anonymous:
-            paste.created_by = info.context.user
         paste.save()
         return CreatePaste(paste=paste)
 
@@ -60,11 +79,15 @@ class UpdatePaste(graphene.Mutation):
     def mutate(self, info, input=None):
         if info.context.user.is_anonymous:
             raise Exception('Only authenticated users can update their pastes')
+        folder = None
+        if input.folder_id:
+            folder = Folder.objects.filter(id=input.folder_id).first()
+            if folder is None:
+                raise Exception('Folder with that ID not found.')
 
-        paste_qs = Paste.objects.filter(id=input.id)
-        if len(paste_qs) == 0:
+        paste = Paste.objects.filter(id=input.id).first()
+        if paste is None:
             raise Exception('Paste object with the given ID not found!')
-        paste = paste_qs[0]
 
         if paste.created_by is not None and (paste.created_by.username !=
                                              info.context.user.username):
@@ -72,6 +95,7 @@ class UpdatePaste(graphene.Mutation):
         paste.title = input.title
         paste.content = input.content
         paste.public = input.public
+        paste.folder = folder
         paste.save()
         return UpdatePaste(paste=paste)
 

@@ -182,3 +182,53 @@ class PasteAPITestCase(JSONWebTokenTestCase, GraphQLTestCase):
         updated_paste = Paste.objects.get(pk=paste.id)
         self.assertEqual(updated_paste.content, paste.content)
         self.assertNotEqual(updated_paste.content, 'Updated Paste')
+
+    def test_anonymous_users_can_not_set_folder_to_a_paste(self):
+        response = self.query(
+            '''
+            mutation createPaste($input: CreatePasteInput!) {
+                createPaste(input: $input) {
+                    paste {
+                        id
+                        title
+                        folder {
+                            name
+                        }
+                    }
+                }
+            }
+            ''',
+            op_name='createPaste',
+            input_data={
+                'content': 'Test Paste',
+                'folderId': self.folder.id
+            },
+        )
+        self.assertResponseHasErrors(response)
+        self.assertEqual(Paste.objects.count(), 4)
+
+    def test_authenticated_users_can_set_folder_to_a_paste(self):
+        query = '''
+            mutation createPaste($input: CreatePasteInput!) {
+                createPaste(input: $input) {
+                    paste {
+                        id
+                        title
+                        folder {
+                            name
+                        }
+                    }
+                }
+            }
+        '''
+        variables = {
+            'input': {
+                'content': 'Test Paste',
+                'folderId': self.folder.id
+            }
+        }
+        self.client.execute(query, variables)
+        self.assertEqual(Paste.objects.count(), 5)
+        paste = Paste.objects.filter(content='Test Paste').first()
+        self.assertEqual(paste.folder, self.folder)
+        self.assertEqual(paste.created_by.username, self.user.username)
