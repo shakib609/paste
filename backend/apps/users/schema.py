@@ -1,5 +1,6 @@
 import graphene
 from django.contrib.auth import get_user_model
+from graphql_jwt.decorators import login_required, user_passes_test
 
 from .types import UserDetailType
 
@@ -7,9 +8,8 @@ from .types import UserDetailType
 class Query(graphene.ObjectType):
     me = graphene.Field(UserDetailType)
 
+    @login_required
     def resolve_me(self, info, *args, **kwargs):
-        if info.context.user.is_anonymous:
-            raise Exception('Anonymous users can not query this endpoint.')
         return info.context.user
 
 
@@ -31,9 +31,8 @@ class RegisterUser(graphene.Mutation):
     class Arguments:
         input = RegisterUserInput(required=True)
 
+    @user_passes_test(lambda user: user.is_anonymous)
     def mutate(self, info, input=None):
-        if info.context.user.is_authenticated:
-            raise Exception('Authenticated user can not register again.')
         user = get_user_model().objects.create(
             username=input.username,
             email=input.email,
@@ -51,12 +50,9 @@ class UpdateUser(graphene.Mutation):
     class Arguments:
         input = UpdateUserInput(required=True)
 
+    @login_required
     def mutate(self, info, input=None):
-        if info.context.user.is_anonymous:
-            raise Exception('Anonymous user can not be updated.')
-        user = get_user_model().objects.filter(username=input.username).first()
-        if user is None:
-            raise Exception('User with that username not found.')
+        user = info.context.user
         if input.username != user.username:
             user.username = input.username
         if input.email:

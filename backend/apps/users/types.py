@@ -1,6 +1,7 @@
-from django.contrib.auth import get_user_model
 import graphene
+from graphql_jwt.decorators import login_required
 from graphene_django import DjangoObjectType
+from django.contrib.auth import get_user_model
 
 _PasteType = 'backend.apps.pastes.types.PasteType'
 _FolderType = 'backend.apps.pastes.types.FolderType'
@@ -19,12 +20,10 @@ class UserDetailType(DjangoObjectType):
             'last_name',
         )
 
+    @login_required
     def resolve_folders(self, info, **kwargs):
-        if info.context.user.is_anonymous:
-            raise Exception('Anonymous users can not make this query.')
         return info.context.user.folders.all()
 
+    @login_required
     def resolve_pastes(self, info, **kwargs):
-        if info.context.user.is_anonymous:
-            raise Exception('Anonymous users can not make this query.')
         return info.context.user.pastes.all()

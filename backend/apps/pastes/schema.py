@@ -1,4 +1,5 @@
 import graphene
+from graphql_jwt.decorators import login_required
 
 from .models import Folder, Paste
 from .types import FolderType, PasteType
@@ -12,11 +13,9 @@ class Query(graphene.ObjectType):
     def resolve_pastes(self, info, **kwargs):
         return Paste.objects.all()
 
+    @login_required
     def resolve_folders(self, info, **kwargs):
-        if info.context.user.is_anonymous:
-            raise Exception('Anonymous users can not query folders')
-        else:
-            return Folder.objects.filter(created_by=info.context.user)
+        return Folder.objects.filter(created_by=info.context.user)
 
 
 # Mutations
@@ -68,9 +67,8 @@ class UpdatePaste(graphene.Mutation):
     class Arguments:
         input = UpdatePasteInput(required=True)
 
+    @login_required
     def mutate(self, info, input=None):
-        if info.context.user.is_anonymous:
-            raise Exception('Only authenticated users can update their pastes')
         folder = None
         if input.folder_id:
             folder = Folder.objects.filter(id=input.folder_id).first()
@@ -102,9 +100,8 @@ class CreateFolder(graphene.Mutation):
     class Arguments:
         input = CreateFolderInput(required=True)
 
+    @login_required
     def mutate(self, info, input=None):
-        if info.context.user.is_anonymous:
-            raise Exception('Anonymous users can not create folders.')
         folder = Folder.objects.create(
             name=input.name,
             created_by=info.context.user,
@@ -122,10 +119,9 @@ class UpdateFolder(graphene.Mutation):
     class Arguments:
         input = UpdateFolderInput(required=True)
 
+    @login_required
     def mutate(self, info, input=None):
         user = info.context.user
-        if user.is_anonymous:
-            raise Exception('Anonymous users can not update folders.')
         folder = Folder.objects.filter(id=input.id, created_by=user).first()
         if folder is None:
             raise Exception(f'Folder with the ID {input.id} not found.')
