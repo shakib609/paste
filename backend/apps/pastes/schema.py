@@ -1,22 +1,7 @@
 import graphene
-from graphene_django import DjangoObjectType
 
 from .models import Folder, Paste
-from ..users.schema import UserDetailType
-
-
-class PasteType(DjangoObjectType):
-    created_by = UserDetailType
-
-    class Meta:
-        model = Paste
-
-
-class FolderType(DjangoObjectType):
-    created_by = UserDetailType
-
-    class Meta:
-        model = Folder
+from .types import FolderType, PasteType
 
 
 # Queries
