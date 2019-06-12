@@ -5,7 +5,7 @@ from graphql_jwt.testcases import JSONWebTokenTestCase
 from backend.schema import schema
 
 
-class UserAPITestCase(JSONWebTokenTestCase, GraphQLTestCase):
+class RegisterUserMutationTestCase(JSONWebTokenTestCase, GraphQLTestCase):
     GRAPHQL_URL = "/api/gql/"
     GRAPHQL_SCHEMA = schema
 

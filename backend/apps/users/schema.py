@@ -14,6 +14,15 @@ class UserDetailType(DjangoObjectType):
         )
 
 
+class Query(graphene.ObjectType):
+    me = graphene.Field(UserDetailType)
+
+    def resolve_me(self, info, *args, **kwargs):
+        if info.context.user.is_anonymous:
+            raise Exception('Anonymous users can not query this endpoint.')
+        return info.context.user
+
+
 class RegisterUserInput(graphene.InputObjectType):
     username = graphene.String(required=True)
     password = graphene.String(required=True)

@@ -5,7 +5,11 @@ from backend.apps.pastes import schema as pastes_schema
 from backend.apps.users import schema as users_schema
 
 
-class Query(pastes_schema.Query, graphene.ObjectType):
+class Query(
+        pastes_schema.Query,
+        users_schema.Query,
+        graphene.ObjectType,
+):
     pass
 
 
