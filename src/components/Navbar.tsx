@@ -1,11 +1,29 @@
 import React from "react";
-import { Navbar, Container, Button } from "rbx";
-import { Link } from "react-router-dom";
+import { Link } from "@reach/router";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Button from "@material-ui/core/Button";
+import Container from "@material-ui/core/Container";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
 
-import LoginRegisterModal from "./LoginRegisterModal";
+const useStyles = makeStyles(() =>
+  createStyles({
+    appbar: {
+      marginBottom: 25
+    },
+    title: {
+      flexGrow: 1
+    }
+  })
+);
 
-const PNavbar: React.FC = () => {
-  // TODO: Set this to false later
+type NavbarProps = {
+  default?: boolean;
+};
+
+const Navbar: React.FC<NavbarProps> = () => {
+  const classes = useStyles();
   const [modalVisible, setModalVisible] = React.useState(false);
   const [formType, setFormType] = React.useState("login");
 
@@ -15,42 +33,25 @@ const PNavbar: React.FC = () => {
   }
 
   return (
-    <React.Fragment>
-      <LoginRegisterModal
-        active={modalVisible}
-        formType={formType}
-        setFormType={fT => setFormType(fT)}
-        onClose={() => setModalVisible(false)}
-      />
-      <Navbar color="light">
-        <Container>
-          <Navbar.Brand>
-            <Navbar.Item as={Link} to="/">
-              <h1>
-                <b>Paste</b>
-              </h1>
-            </Navbar.Item>
-            <Navbar.Burger />
-          </Navbar.Brand>
-          <Navbar.Menu>
-            <Navbar.Segment align="end">
-              <Navbar.Item as="span">
-                <Button color="primary" as={Link} to="/">
-                  <b>+ New Paste</b>
-                </Button>
-              </Navbar.Item>
-              <Navbar.Item onClick={() => openModal("login")}>
-                Login
-              </Navbar.Item>
-              <Navbar.Item onClick={() => openModal("register")}>
-                Register
-              </Navbar.Item>
-            </Navbar.Segment>
-          </Navbar.Menu>
-        </Container>
-      </Navbar>
-    </React.Fragment>
+    <AppBar position="relative" className={classes.appbar}>
+      <Container>
+        <Toolbar>
+          <Typography variant="h6" className={classes.title}>
+            Paste
+          </Typography>
+          <Button color="inherit" component={Link} to="/">
+            + New Paste
+          </Button>
+          <Button color="inherit" onClick={() => openModal("login")}>
+            Login
+          </Button>
+          <Button color="inherit" onClick={() => openModal("register")}>
+            Register
+          </Button>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 };
 
-export default PNavbar;
+export default Navbar;

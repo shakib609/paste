@@ -1,6 +1,6 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
+import { Router } from "@reach/router";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import Navbar from "./components/Navbar";
 import TransparentFullPageSpinner from "./components/TransparentFullPageSpinner";
 
@@ -8,14 +8,15 @@ const NewPaste = React.lazy(() => import("./pages/NewPaste"));
 
 const App: React.FC = () => {
   return (
-    <Router>
+    <React.Fragment>
+      <CssBaseline />
+      <Navbar />
       <React.Suspense fallback={<TransparentFullPageSpinner />}>
-        <Navbar />
-        <Switch>
-          <Route path="/" exact component={NewPaste} />
-        </Switch>
+        <Router>
+          <NewPaste path="/" />
+        </Router>
       </React.Suspense>
-    </Router>
+    </React.Fragment>
   );
 };
 
