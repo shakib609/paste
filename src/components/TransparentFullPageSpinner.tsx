@@ -1,4 +1,5 @@
 import React from "react";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const containerStyle: React.CSSProperties = {
   position: "absolute",
@@ -21,7 +22,7 @@ const spinnerStyle: React.CSSProperties = {
 
 const TransparentFullPageSpinner: React.FC = () => (
   <div style={containerStyle}>
-    <h1 style={spinnerStyle}>Loading...</h1>
+    <CircularProgress style={spinnerStyle} />
   </div>
 );
 

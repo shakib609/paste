@@ -1,19 +1,44 @@
 import React from "react";
-import { Container, Column } from "rbx";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
 
-const NewPaste: React.FC = () => {
+import NewPasteForm from "../components/NewPasteForm";
+
+const useStyles = makeStyles(theme =>
+  createStyles({
+    paper: {
+      padding: theme.spacing(2)
+    }
+  })
+);
+
+type NewPasteProps = {
+  path?: string;
+};
+
+const NewPaste: React.FC<NewPasteProps> = () => {
+  const classes = useStyles();
+
   return (
-    <Container style={{ marginTop: "20px" }}>
-      <Column.Group>
-        <Column size="three-quarters">
-          {/* TODO: NewPasteForm */}
-          <h1>Placeholder for NewPasteForm</h1>
-        </Column>
-        <Column>
-          {/* TODO: Recent Pastes */}
-          <h1 className="has-text-right">Placeholder for Recent Pastes</h1>
-        </Column>
-      </Column.Group>
+    <Container>
+      <Grid container justify="space-between" spacing={2}>
+        <Grid item md={9} xs={12}>
+          <Paper className={classes.paper}>
+            <NewPasteForm />
+          </Paper>
+        </Grid>
+
+        <Grid item md={3} xs={12}>
+          <Paper className={classes.paper}>
+            <Typography variant="h6" component="h6">
+              Public Pastes
+            </Typography>
+          </Paper>
+        </Grid>
+      </Grid>
     </Container>
   );
 };

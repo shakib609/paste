@@ -7,13 +7,16 @@ import Container from "@material-ui/core/Container";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles(theme =>
   createStyles({
     appbar: {
       marginBottom: 25
     },
     title: {
       flexGrow: 1
+    },
+    newPasteButton: {
+      marginRight: theme.spacing(1)
     }
   })
 );
@@ -39,7 +42,13 @@ const Navbar: React.FC<NavbarProps> = () => {
           <Typography variant="h6" className={classes.title}>
             Paste
           </Typography>
-          <Button color="inherit" component={Link} to="/">
+          <Button
+            color="secondary"
+            variant="contained"
+            className={classes.newPasteButton}
+            component={Link}
+            to="/"
+          >
             + New Paste
           </Button>
           <Button color="inherit" onClick={() => openModal("login")}>
