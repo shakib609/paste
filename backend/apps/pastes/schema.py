@@ -7,11 +7,14 @@ from .types import FolderType, PasteType
 
 # Queries
 class Query(graphene.ObjectType):
-    pastes = graphene.List(PasteType)
+    pastes = graphene.List(PasteType, last=graphene.Int())
     folders = graphene.List(FolderType)
 
-    def resolve_pastes(self, info, **kwargs):
-        return Paste.objects.all()
+    def resolve_pastes(self, info, last=None, **kwargs):
+        qs = Paste.objects.filter(public=True)
+        if last:
+            return qs[:5]
+        return qs
 
     @login_required
     def resolve_folders(self, info, **kwargs):

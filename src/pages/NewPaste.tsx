@@ -6,6 +6,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
 import NewPasteForm from "../components/NewPasteForm";
+import RecentPastesList from "../components/RecentPastesList";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -36,6 +37,7 @@ const NewPaste: React.FC<NewPasteProps> = () => {
             <Typography variant="h6" component="h6">
               Public Pastes
             </Typography>
+            <RecentPastesList />
           </Paper>
         </Grid>
       </Grid>

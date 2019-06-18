@@ -1,14 +1,21 @@
 import React from "react";
 import { Router } from "@reach/router";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from "react-apollo";
+
 import Navbar from "./components/Navbar";
 import TransparentFullPageSpinner from "./components/TransparentFullPageSpinner";
 
 const NewPaste = React.lazy(() => import("./pages/NewPaste"));
 
+const client = new ApolloClient({
+  uri: "http://localhost:8000/api/gql/"
+});
+
 const App: React.FC = () => {
   return (
-    <React.Fragment>
+    <ApolloProvider client={client}>
       <CssBaseline />
       <Navbar />
       <React.Suspense fallback={<TransparentFullPageSpinner />}>
@@ -16,7 +23,7 @@ const App: React.FC = () => {
           <NewPaste path="/" />
         </Router>
       </React.Suspense>
-    </React.Fragment>
+    </ApolloProvider>
   );
 };
 

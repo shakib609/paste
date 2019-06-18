@@ -49,7 +49,7 @@ const Navbar: React.FC<NavbarProps> = () => {
             component={Link}
             to="/"
           >
-            + New Paste
+            + New
           </Button>
           <Button color="inherit" onClick={() => openModal("login")}>
             Login
