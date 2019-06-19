@@ -8,6 +8,7 @@ from .types import FolderType, PasteType
 # Queries
 class Query(graphene.ObjectType):
     pastes = graphene.List(PasteType, last=graphene.Int())
+    paste = graphene.Field(PasteType, id=graphene.ID(required=True))
     folders = graphene.List(FolderType)
 
     def resolve_pastes(self, info, last=None, **kwargs):
@@ -15,6 +16,12 @@ class Query(graphene.ObjectType):
         if last:
             return qs[:5]
         return qs
+
+    def resolve_paste(self, info, id=None, **kwargs):
+        paste = Paste.objects.filter(id=id).first()
+        if paste is None:
+            raise Exception(f'Paste with the id {id} not found')
+        return paste
 
     @login_required
     def resolve_folders(self, info, **kwargs):
