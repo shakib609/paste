@@ -20,7 +20,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 
 import languageOptions from "../languageOptions";
-import { CREATE_PASTE } from "../gqlQueryMutatioions";
+import { CREATE_PASTE } from "../gqlQueryMutations";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -179,7 +179,11 @@ const NewPasteForm: React.FC = () => {
                   type="submit"
                   disabled={result.loading}
                 >
-                  {result.loading ? <CircularProgress /> : "Create Paste"}
+                  {result.loading ? (
+                    <CircularProgress color="inherit" size={18} />
+                  ) : (
+                    "Create Paste"
+                  )}
                 </Button>
               </FormControl>
             </Grid>

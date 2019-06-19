@@ -10,6 +10,21 @@ export const GET_RECENT_PASTES = gql`
   }
 `;
 
+export const GET_PASTE_DETAILS = gql`
+  query paste($id: ID!) {
+    paste(id: $id) {
+      title
+      content
+      createdAt
+      public
+      language
+      createdBy {
+        username
+      }
+    }
+  }
+`;
+
 export const CREATE_PASTE = gql`
   mutation createPaste($input: CreatePasteInput!) {
     createPaste(input: $input) {

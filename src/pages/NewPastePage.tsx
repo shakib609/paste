@@ -3,7 +3,6 @@ import { createStyles, makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 
 import NewPasteForm from "../components/NewPasteForm";
 import RecentPastesList from "../components/RecentPastesList";
@@ -16,11 +15,11 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-type NewPasteProps = {
+type NewPastePageProps = {
   path?: string;
 };
 
-const NewPaste: React.FC<NewPasteProps> = () => {
+const NewPastePage: React.FC<NewPastePageProps> = () => {
   const classes = useStyles();
 
   return (
@@ -34,9 +33,6 @@ const NewPaste: React.FC<NewPasteProps> = () => {
 
         <Grid item md={3} xs={12}>
           <Paper className={classes.paper}>
-            <Typography variant="h6" component="h6">
-              Public Pastes
-            </Typography>
             <RecentPastesList />
           </Paper>
         </Grid>
@@ -45,4 +41,4 @@ const NewPaste: React.FC<NewPasteProps> = () => {
   );
 };
 
-export default NewPaste;
+export default NewPastePage;

@@ -7,7 +7,8 @@ import { ApolloProvider } from "react-apollo";
 import Navbar from "./components/Navbar";
 import TransparentFullPageSpinner from "./components/TransparentFullPageSpinner";
 
-const NewPaste = React.lazy(() => import("./pages/NewPaste"));
+const NewPastePage = React.lazy(() => import("./pages/NewPastePage"));
+const PasteDetailsPage = React.lazy(() => import("./pages/PasteDetailsPage"));
 
 const client = new ApolloClient({
   uri: "http://localhost:8000/api/gql/"
@@ -20,7 +21,8 @@ const App: React.FC = () => {
       <Navbar />
       <React.Suspense fallback={<TransparentFullPageSpinner />}>
         <Router>
-          <NewPaste path="/" />
+          <NewPastePage path="/" />
+          <PasteDetailsPage path="/:pasteId" />
         </Router>
       </React.Suspense>
     </ApolloProvider>
