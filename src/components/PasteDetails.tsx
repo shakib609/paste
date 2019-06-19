@@ -1,6 +1,6 @@
 import React from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import obsidian from "react-syntax-highlighter/dist/styles/hljs/obsidian";
+import monoBlue from "react-syntax-highlighter/dist/styles/hljs/mono-blue";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
@@ -95,12 +95,15 @@ const PasteDetails: React.FC<PasteDetailProps> = ({ paste }) => {
       </div>
       <SyntaxHighlighter
         language={paste.language || "plaintext"}
-        style={obsidian}
+        style={monoBlue}
         showLineNumbers
+        customStyle={{
+          fontSize: "14px"
+        }}
       >
         {paste.content}
       </SyntaxHighlighter>
-      {/* Copied Snackbar */}
+      {/* Copied to Clipboard Snackbar */}
       <Snackbar
         anchorOrigin={{
           vertical: "bottom",

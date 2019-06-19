@@ -7,6 +7,8 @@ import Container from "@material-ui/core/Container";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 
+import LoginRegisterModal from "./LoginRegisterModal";
+
 const useStyles = makeStyles(theme =>
   createStyles({
     appbar: {
@@ -36,30 +38,38 @@ const Navbar: React.FC<NavbarProps> = () => {
   }
 
   return (
-    <AppBar position="relative" className={classes.appbar}>
-      <Container>
-        <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            Paste
-          </Typography>
-          <Button
-            color="secondary"
-            variant="contained"
-            className={classes.newPasteButton}
-            component={Link}
-            to="/"
-          >
-            + New
-          </Button>
-          <Button color="inherit" onClick={() => openModal("login")}>
-            Login
-          </Button>
-          <Button color="inherit" onClick={() => openModal("register")}>
-            Register
-          </Button>
-        </Toolbar>
-      </Container>
-    </AppBar>
+    <React.Fragment>
+      <AppBar position="relative" className={classes.appbar}>
+        <Container>
+          <Toolbar>
+            <Typography variant="h6" className={classes.title}>
+              Paste
+            </Typography>
+            <Button
+              color="secondary"
+              variant="contained"
+              className={classes.newPasteButton}
+              component={Link}
+              to="/"
+            >
+              + New
+            </Button>
+            <Button color="inherit" onClick={() => openModal("login")}>
+              Login
+            </Button>
+            <Button color="inherit" onClick={() => openModal("register")}>
+              Register
+            </Button>
+          </Toolbar>
+        </Container>
+      </AppBar>
+      <LoginRegisterModal
+        open={modalVisible}
+        onClose={() => {
+          setModalVisible(false);
+        }}
+      />
+    </React.Fragment>
   );
 };
 

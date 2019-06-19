@@ -159,4 +159,9 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+# Disabling Token Expiration
+GRAPHQL_JWT = {
+    'JWT_VERIFY_EXPIRATION': False,
+}
+
 CORS_ORIGIN_ALLOW_ALL = True

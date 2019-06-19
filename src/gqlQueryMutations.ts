@@ -44,3 +44,11 @@ export const UPDATE_PASTE = gql`
     }
   }
 `;
+
+export const OBTAIN_JWT_TOKEN = gql`
+  mutation tokenAuth($username: String!, $password: String!) {
+    tokenAuth(username: $username, password: $password) {
+      token
+    }
+  }
+`;

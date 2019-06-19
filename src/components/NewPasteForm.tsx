@@ -107,6 +107,7 @@ const NewPasteForm: React.FC = () => {
                 name="content"
                 placeholder="Paste Your Code Here"
                 required
+                autoFocus
                 value={values.content}
                 className={classes.textField}
                 onChange={handleChange("content")}

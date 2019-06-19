@@ -16,3 +16,9 @@ export const formatDate: (dateString: string) => string = dateString => {
   ];
   return `${months[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
 };
+
+export const capitalize: (str: string) => string = str => {
+  const chars = str.split("");
+  if (chars.length) chars[0] = chars[0].toUpperCase();
+  return chars.join("");
+};
