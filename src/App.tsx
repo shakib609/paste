@@ -14,10 +14,9 @@ const NewPastePage = React.lazy(() => import("./pages/NewPastePage"));
 const PasteDetailsPage = React.lazy(() => import("./pages/PasteDetailsPage"));
 
 const graphqlServerURI =
-  process.env.NODE_ENV !== "production"
+  process.env.NODE_ENV === "production"
     ? "/api/gql/"
     : "http://localhost:8000/api/gql/";
-
 const client = new ApolloClient({
   uri: graphqlServerURI
 });
