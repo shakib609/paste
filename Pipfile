@@ -7,11 +7,13 @@ verify_ssl = true
 
 [packages]
 django = "*"
-whitenoise = "*"
-graphene-django = "*"
 django-filter = "*"
 django-graphql-jwt = "*"
 django-cors-headers = "*"
+django-heroku = "*"
+graphene-django = "*"
+gunicorn = "*"
+whitenoise = "*"
 
 [requires]
 python_version = "3.7"
