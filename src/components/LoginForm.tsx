@@ -9,8 +9,11 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
 import { OBTAIN_JWT_TOKEN } from "../gqlQueryMutations";
+import { useAuthentication } from "../contexts/useAuthentication";
 
 const LoginForm: React.FC<any> = props => {
+  const { login } = useAuthentication();
+
   const [values, setValues] = React.useState({
     username: "",
     password: ""
@@ -29,7 +32,7 @@ const LoginForm: React.FC<any> = props => {
       onCompleted={(data: any) => {
         const token: string | undefined | null = data.tokenAuth.token;
         if (token) {
-          localStorage.setItem("jwtToken", token);
+          login(token);
           props.onModalClose();
         }
       }}

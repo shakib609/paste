@@ -6,6 +6,7 @@ import { ApolloProvider } from "react-apollo";
 
 import Navbar from "./components/Navbar";
 import Snackbar from "./components/Snackbar";
+import { AuthenticationProvider } from "./contexts/useAuthentication";
 import { SnackbarProvider } from "./contexts/useSnackbar";
 import TransparentFullPageSpinner from "./components/TransparentFullPageSpinner";
 
@@ -20,16 +21,18 @@ const App: React.FC = () => {
   return (
     <ApolloProvider client={client}>
       <CssBaseline />
-      <SnackbarProvider>
-        <Navbar />
-        <React.Suspense fallback={<TransparentFullPageSpinner />}>
-          <Router>
-            <NewPastePage path="/" />
-            <PasteDetailsPage path="/:pasteId" />
-          </Router>
-        </React.Suspense>
-        <Snackbar />
-      </SnackbarProvider>
+      <AuthenticationProvider>
+        <SnackbarProvider>
+          <Navbar />
+          <React.Suspense fallback={<TransparentFullPageSpinner />}>
+            <Router>
+              <NewPastePage path="/" />
+              <PasteDetailsPage path="/:pasteId" />
+            </Router>
+          </React.Suspense>
+          <Snackbar />
+        </SnackbarProvider>
+      </AuthenticationProvider>
     </ApolloProvider>
   );
 };

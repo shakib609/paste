@@ -52,6 +52,10 @@ const PasteDetails: React.FC<PasteDetailProps> = ({ paste }) => {
   const classes = useStyles();
   const { openSnackbar } = useSnackbar();
 
+  React.useEffect(() => {
+    document.title = `${paste.title || "Untitled Paste"} | Paste`;
+  });
+
   return (
     <React.Fragment>
       <Typography variant="h5" component="h1">

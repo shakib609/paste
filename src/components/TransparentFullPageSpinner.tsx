@@ -7,19 +7,16 @@ const containerStyle: React.CSSProperties = {
   top: 0,
   width: "100%",
   height: "100%",
-  backgroundColor: "rgba(255, 255, 255, 0.7)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: "rgba(255, 255, 255, 0.65)",
   zIndex: 9999
-};
-
-const spinnerStyle: React.CSSProperties = {
-  position: "absolute",
-  top: "45%",
-  left: "45%"
 };
 
 const TransparentFullPageSpinner: React.FC = () => (
   <div style={containerStyle}>
-    <CircularProgress style={spinnerStyle} color="primary" />
+    <CircularProgress color="primary" />
   </div>
 );
 

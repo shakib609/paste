@@ -21,6 +21,7 @@ import Typography from "@material-ui/core/Typography";
 
 import languageOptions from "../languageOptions";
 import { CREATE_PASTE } from "../gqlQueryMutations";
+import { capitalize } from "../utils";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -149,7 +150,7 @@ const NewPasteForm: React.FC = () => {
                   </MenuItem>
                   {languageOptions.map(lang => (
                     <MenuItem value={lang.value} key={lang.value}>
-                      {lang.text}
+                      {capitalize(lang.text)}
                     </MenuItem>
                   ))}
                 </Select>

@@ -8,6 +8,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 
 import LoginRegisterModal from "./LoginRegisterModal";
+import { useAuthentication } from "../contexts/useAuthentication";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -16,6 +17,10 @@ const useStyles = makeStyles(theme =>
     },
     title: {
       flexGrow: 1
+    },
+    titleLink: {
+      color: "#fcfdfe",
+      textDecoration: "none"
     },
     newPasteButton: {
       marginRight: theme.spacing(1)
@@ -29,6 +34,7 @@ type NavbarProps = {
 
 const Navbar: React.FC<NavbarProps> = () => {
   const classes = useStyles();
+  const { authToken, logout } = useAuthentication();
   const [modalVisible, setModalVisible] = React.useState(false);
   const [formType, setFormType] = React.useState("login");
 
@@ -43,7 +49,9 @@ const Navbar: React.FC<NavbarProps> = () => {
         <Container>
           <Toolbar>
             <Typography variant="h6" className={classes.title}>
-              Paste
+              <Link to="/" className={classes.titleLink}>
+                Paste
+              </Link>
             </Typography>
             <Button
               color="secondary"
@@ -54,23 +62,33 @@ const Navbar: React.FC<NavbarProps> = () => {
             >
               + New
             </Button>
-            <Button color="inherit" onClick={() => openModal("login")}>
-              Login
-            </Button>
-            <Button color="inherit" onClick={() => openModal("register")}>
-              Register
-            </Button>
+            {authToken ? (
+              <Button color="inherit" onClick={logout}>
+                Logout
+              </Button>
+            ) : (
+              <React.Fragment>
+                <Button color="inherit" onClick={() => openModal("login")}>
+                  Login
+                </Button>
+                <Button color="inherit" onClick={() => openModal("register")}>
+                  Register
+                </Button>
+              </React.Fragment>
+            )}
           </Toolbar>
         </Container>
       </AppBar>
-      <LoginRegisterModal
-        formType={formType}
-        setFormType={setFormType}
-        open={modalVisible}
-        onClose={() => {
-          setModalVisible(false);
-        }}
-      />
+      {!authToken && (
+        <LoginRegisterModal
+          formType={formType}
+          setFormType={setFormType}
+          open={modalVisible}
+          onClose={() => {
+            setModalVisible(false);
+          }}
+        />
+      )}
     </React.Fragment>
   );
 };
