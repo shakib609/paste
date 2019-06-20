@@ -1,4 +1,5 @@
 import React from "react";
+import { navigate } from "@reach/router";
 import {
   Mutation,
   MutationFn,
@@ -81,7 +82,10 @@ const NewPasteForm: React.FC = () => {
   return (
     <Mutation
       mutation={CREATE_PASTE}
-      onCompleted={(data: any) => console.log(data)}
+      onCompleted={(data: any) => {
+        const { id } = data.createPaste.paste;
+        navigate(`/${id}`);
+      }}
     >
       {(
         addTodo: MutationFn<any, OperationVariables>,
