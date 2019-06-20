@@ -64,6 +64,8 @@ const Navbar: React.FC<NavbarProps> = () => {
         </Container>
       </AppBar>
       <LoginRegisterModal
+        formType={formType}
+        setFormType={setFormType}
         open={modalVisible}
         onClose={() => {
           setModalVisible(false);

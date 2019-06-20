@@ -1,56 +1,43 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 import { capitalize } from "../utils";
 import LoginForm from "./LoginForm";
+import RegisterForm from "./RegisterForm";
 
 type LoginRegisterModalProps = {
   open: boolean;
   onClose: () => void;
+  formType: string;
+  setFormType: (formType: string) => void;
 };
 
 const useStyles = makeStyles(theme => ({
-  modal: {
-    alignItems: "center",
-    justifyContent: "center"
+  dialog: {
+    width: 320
   },
-  modalBody: {
-    position: "absolute",
-    top: "25vh",
-    bottom: "10vh",
-    margin: "auto"
-  },
-  paper: {
-    width: 320,
+  dialogBody: {
     padding: theme.spacing(2),
-    margin: "25vh auto 10vh"
-  },
-  modalTitle: {
-    marginBottom: theme.spacing(1)
+    paddingTop: 0
   }
 }));
 
 const LoginRegisterModal: React.FC<LoginRegisterModalProps> = props => {
   const classes = useStyles();
-  const [formType, setFormType] = React.useState("login");
+  const { formType } = props;
 
   return (
-    <Modal open={props.open} onClose={props.onClose} className={classes.modal}>
-      <Paper className={classes.paper}>
-        <Typography
-          variant="h5"
-          component="h3"
-          align="center"
-          className={classes.modalTitle}
-        >
-          {capitalize(formType)}
-        </Typography>
+    <Dialog open={props.open} onClose={props.onClose} maxWidth="xs">
+      <DialogTitle>{capitalize(formType)}</DialogTitle>
+      <div className={classes.dialogBody}>
         {formType === "login" && <LoginForm onModalClose={props.onClose} />}
-      </Paper>
-    </Modal>
+        {formType === "register" && (
+          <RegisterForm onModalClose={props.onClose} />
+        )}
+      </div>
+    </Dialog>
   );
 };
 

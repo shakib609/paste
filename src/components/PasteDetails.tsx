@@ -4,7 +4,6 @@ import monoBlue from "react-syntax-highlighter/dist/styles/hljs/mono-blue";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
-import Snackbar from "@material-ui/core/Snackbar";
 import Typography from "@material-ui/core/Typography";
 import FaceIcon from "@material-ui/icons/Face";
 import DateRangeIcon from "@material-ui/icons/DateRange";
@@ -12,6 +11,7 @@ import LanguageIcon from "@material-ui/icons/Language";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 
 import { formatDate } from "../utils";
+import { useSnackbar } from "../contexts/useSnackbar";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -50,8 +50,7 @@ type PasteDetailProps = {
 
 const PasteDetails: React.FC<PasteDetailProps> = ({ paste }) => {
   const classes = useStyles();
-
-  const [snackbarVisibility, setSnackbarVisibility] = React.useState(false);
+  const { openSnackbar } = useSnackbar();
 
   return (
     <React.Fragment>
@@ -82,7 +81,7 @@ const PasteDetails: React.FC<PasteDetailProps> = ({ paste }) => {
         <div className={classes.copyButton}>
           <CopyToClipboard
             text={paste.content}
-            onCopy={() => setSnackbarVisibility(true)}
+            onCopy={() => openSnackbar("Copied to Clipboard")}
           >
             <Chip
               variant="outlined"
@@ -103,17 +102,6 @@ const PasteDetails: React.FC<PasteDetailProps> = ({ paste }) => {
       >
         {paste.content}
       </SyntaxHighlighter>
-      {/* Copied to Clipboard Snackbar */}
-      <Snackbar
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left"
-        }}
-        open={snackbarVisibility}
-        autoHideDuration={6000}
-        onClose={() => setSnackbarVisibility(false)}
-        message="Copied to Clipboard!"
-      />
     </React.Fragment>
   );
 };

@@ -52,3 +52,13 @@ export const OBTAIN_JWT_TOKEN = gql`
     }
   }
 `;
+
+export const REGISTER_USER = gql`
+  mutation registerUser($input: RegisterUserInput!) {
+    registerUser(input: $input) {
+      user {
+        username
+      }
+    }
+  }
+`;
