@@ -101,10 +101,10 @@ const Navbar: React.FC<NavbarProps> = () => {
                 >
                   <MenuItem
                     component={Link}
-                    to="/profile"
+                    to="/my"
                     onClick={closeProfileMenu}
                   >
-                    Profile
+                    Pastes
                   </MenuItem>
                   <MenuItem
                     onClick={() => {

@@ -12,7 +12,7 @@ import DefaultLayout from "./layouts/DefaultLayout";
 
 const NewPastePage = React.lazy(() => import("./pages/NewPastePage"));
 const PasteDetailsPage = React.lazy(() => import("./pages/PasteDetailsPage"));
-const ProfilePage = React.lazy(() => import("./pages/ProfilePage"));
+const MyPastesPage = React.lazy(() => import("./pages/MyPastesPage"));
 
 const graphqlServerURI =
   process.env.NODE_ENV === "production"
@@ -32,7 +32,7 @@ const App: React.FC = () => {
             <Router>
               <DefaultLayout path="/">
                 <NewPastePage path="/" />
-                <ProfilePage path="profile" />
+                <MyPastesPage path="my" />
                 <PasteDetailsPage path=":pasteId" />
               </DefaultLayout>
             </Router>
