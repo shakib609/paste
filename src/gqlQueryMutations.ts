@@ -25,6 +25,15 @@ export const GET_PASTE_DETAILS = gql`
   }
 `;
 
+export const GET_FOLDERS = gql`
+  query {
+    folders {
+      id
+      name
+    }
+  }
+`;
+
 export const CREATE_PASTE = gql`
   mutation createPaste($input: CreatePasteInput!) {
     createPaste(input: $input) {

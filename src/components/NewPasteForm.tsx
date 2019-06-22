@@ -1,6 +1,8 @@
 import React from "react";
 import { navigate } from "@reach/router";
 import {
+  Query,
+  QueryResult,
   Mutation,
   MutationFn,
   OperationVariables,
@@ -21,7 +23,8 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 
 import languageOptions from "../languageOptions";
-import { CREATE_PASTE } from "../gqlQueryMutations";
+import { CREATE_PASTE, GET_FOLDERS } from "../gqlQueryMutations";
+import { useAuthentication } from "../contexts/useAuthentication";
 import { capitalize } from "../utils";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -34,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: "14px"
     },
     switch: {
-      marginLeft: 0
+      marginTop: theme.spacing(1)
     }
   })
 );
@@ -44,40 +47,39 @@ interface State {
   content: string;
   language: string;
   public: boolean;
+  folderId: string;
 }
 
 const NewPasteForm: React.FC = () => {
   const classes = useStyles();
+  const { authToken } = useAuthentication();
 
   const inputLabel = React.useRef<HTMLLabelElement>(null);
+  const folderLabel = React.useRef<HTMLLabelElement>(null);
   const [labelWidth, setLabelWidth] = React.useState(0);
+  const [folderLabelWidth, setFolderLabelWidth] = React.useState(0);
 
   React.useEffect(() => {
     setLabelWidth(inputLabel.current!.offsetWidth);
+    folderLabel.current &&
+      setFolderLabelWidth(folderLabel.current!.offsetWidth);
   }, []);
 
   const [values, setValues] = React.useState<State>({
     title: "",
     content: "",
     language: "",
-    public: true
+    public: true,
+    folderId: ""
   });
 
   const handleChange = (name: keyof State) => (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement | any>
   ) => {
     if (name === "public")
       setValues({ ...values, public: event.target.checked });
     else setValues({ ...values, [name]: event.target.value });
   };
-
-  const handleLanguageChange = () => (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>
-  ) =>
-    setValues({
-      ...values,
-      language: `${event.target.value}`
-    });
 
   return (
     <Mutation
@@ -94,7 +96,14 @@ const NewPasteForm: React.FC = () => {
         <form
           onSubmit={e => {
             e.preventDefault();
-            addTodo({ variables: { input: { ...values } } });
+            addTodo({
+              variables: { input: { ...values } },
+              context: {
+                headers: {
+                  Authorization: authToken ? `JWT ${authToken}` : ""
+                }
+              }
+            });
           }}
         >
           <Typography variant="h5" component="h5" className={classes.title}>
@@ -114,7 +123,7 @@ const NewPasteForm: React.FC = () => {
                 required
                 autoFocus
                 value={values.content}
-                className={classes.textField}
+                inputProps={{ className: classes.textField }}
                 onChange={handleChange("content")}
               />
             </Grid>
@@ -139,7 +148,7 @@ const NewPasteForm: React.FC = () => {
                 </InputLabel>
                 <Select
                   value={values.language}
-                  onChange={handleLanguageChange()}
+                  onChange={handleChange("language")}
                   input={
                     <OutlinedInput
                       fullWidth
@@ -161,6 +170,51 @@ const NewPasteForm: React.FC = () => {
               </FormControl>
             </Grid>
 
+            {authToken && (
+              <Query
+                query={GET_FOLDERS}
+                context={{
+                  headers: {
+                    Authorization: `JWT ${authToken}`
+                  }
+                }}
+              >
+                {(result: QueryResult) => (
+                  <Grid item xs={12} sm={6}>
+                    <FormControl variant="outlined" fullWidth margin="dense">
+                      <InputLabel
+                        ref={folderLabel}
+                        htmlFor="folder-select-input"
+                      >
+                        Folder
+                      </InputLabel>
+                      <Select
+                        value={values.folderId}
+                        onChange={handleChange("folderId")}
+                        input={
+                          <OutlinedInput
+                            fullWidth
+                            labelWidth={folderLabelWidth}
+                            name="folder"
+                            id="folder-select-input"
+                          />
+                        }
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        {result.data.folders &&
+                          result.data.folders.map(({ id, name }: any) => (
+                            <MenuItem value={id} key={id}>
+                              {name}
+                            </MenuItem>
+                          ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                )}
+              </Query>
+            )}
             <Grid item xs={12} sm={6}>
               <FormControlLabel
                 value="public"
