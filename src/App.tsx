@@ -4,14 +4,15 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 
-import Navbar from "./components/Navbar";
 import Snackbar from "./components/Snackbar";
 import { AuthenticationProvider } from "./contexts/useAuthentication";
 import { SnackbarProvider } from "./contexts/useSnackbar";
 import TransparentFullPageSpinner from "./components/TransparentFullPageSpinner";
+import DefaultLayout from "./layouts/DefaultLayout";
 
 const NewPastePage = React.lazy(() => import("./pages/NewPastePage"));
 const PasteDetailsPage = React.lazy(() => import("./pages/PasteDetailsPage"));
+const ProfilePage = React.lazy(() => import("./pages/ProfilePage"));
 
 const graphqlServerURI =
   process.env.NODE_ENV === "production"
@@ -27,11 +28,13 @@ const App: React.FC = () => {
       <CssBaseline />
       <AuthenticationProvider>
         <SnackbarProvider>
-          <Navbar />
           <React.Suspense fallback={<TransparentFullPageSpinner />}>
             <Router>
-              <NewPastePage path="/" />
-              <PasteDetailsPage path="/:pasteId" />
+              <DefaultLayout path="/">
+                <NewPastePage path="/" />
+                <ProfilePage path="profile" />
+                <PasteDetailsPage path=":pasteId" />
+              </DefaultLayout>
             </Router>
           </React.Suspense>
           <Snackbar />
