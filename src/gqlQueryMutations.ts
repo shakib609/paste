@@ -42,6 +42,7 @@ export const GET_USER_PASTES = gql`
         id
         title
         language
+        createdAt
       }
       folders {
         id

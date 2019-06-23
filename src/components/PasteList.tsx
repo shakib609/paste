@@ -38,7 +38,10 @@ const PasteList: React.FC<PasteListProps> = ({ pastes }) => {
               </ListItemIcon>
               <ListItemText
                 primary={paste.title || "Untitled Paste"}
-                secondary={formatDate(paste.createdAt)}
+                secondary={
+                  formatDate(paste.createdAt) +
+                  (paste.language ? ` - ${paste.language}` : "")
+                }
               />
             </ListItem>
           ))}

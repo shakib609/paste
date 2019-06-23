@@ -1,8 +1,8 @@
 import React from "react";
 import { Query, QueryResult } from "react-apollo";
-import CircularProgress from "@material-ui/core/CircularProgress";
 
 import PasteDetails from "../components/PasteDetails";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { GET_PASTE_DETAILS } from "../gqlQueryMutations";
 
 type PasteDetailsPageProps = {
@@ -15,7 +15,7 @@ const PasteDetailsPage: React.FC<PasteDetailsPageProps> = ({ pasteId }) => {
     <Query query={GET_PASTE_DETAILS} variables={{ id: pasteId }}>
       {(result: QueryResult) => (
         <React.Fragment>
-          {result.loading && <CircularProgress />}
+          {result.loading && <LoadingSpinner />}
           {result.error && "Something Went Wrong."}
           {result.data.paste && <PasteDetails paste={result.data.paste} />}
         </React.Fragment>
